@@ -1,11 +1,25 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsA  return (
+    <div className="map-container">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={12}
+        onLoad={onMapLoad}
+        onIdle={onIdle} // Use onIdle to avoid excessive updates
+        options={{
+          disableDefaultUI: false, // Show default UI for better visibility during debugging
+          zoomControl: true,
+          mapTypeControl: true,
+          fullscreenControl: true
+        }}rker } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
   height: '100vh',
   position: 'relative', // Needed for positioning child elements
-  flex: 1
+  flex: 1,
+  display: 'block'
 };
 
 // Center on London for this London trip planner

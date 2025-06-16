@@ -49,68 +49,6 @@ function TabPanel(props) {
   );
 }
 
-// Component for displaying locations
-const LocationList = ({ title, locations, type, removeLocation }) => (
-  <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 2 }}>
-    <Typography variant="h6" fontSize={16} fontWeight="500" sx={{ mb: 1 }}>{title}</Typography>
-    {locations.length === 0 ? (
-      <Box sx={{
-        p: 2,
-        textAlign: 'center',
-        backgroundColor: '#f9f9f9',
-        borderRadius: 1,
-        border: '1px dashed #ddd'
-      }}>
-        <Typography variant="body2" color="text.secondary">No locations added yet.</Typography>
-      </Box>
-    ) : (
-      <List dense sx={{ maxHeight: '200px', overflowY: 'auto' }}>
-        {locations.map((loc, index) => (
-          <ListItem
-            key={index}
-            className="location-item"
-            secondaryAction={
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => removeLocation(type, index)}
-                sx={{
-                  color: '#d32f2f',
-                  '&:hover': {
-                    backgroundColor: 'rgba(211, 47, 47, 0.1)'
-                  }
-                }}
-              >
-                <FaTrash size={16} />
-              </IconButton>
-            }
-            sx={{
-              borderRadius: 1,
-              mb: 0.5,
-              '&:hover': { backgroundColor: '#f5f9ff' }
-            }}
-          >
-            <ListItemText
-              primary={
-                <Typography
-                  variant="body2"
-                  fontWeight="500"
-                  sx={{ maxWidth: '300px', textOverflow: 'ellipsis', overflow: 'hidden' }}
-                >
-                  {loc.name.length > 35 ? `${loc.name.substring(0, 35)}...` : loc.name}
-                </Typography>
-              }
-              secondary={`${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`}
-              secondaryTypographyProps={{ fontSize: '12px' }}
-            />
-          </ListItem>
-        ))}
-      </List>
-    )}
-  </Paper>
-);
-
-
 function Sidebar({
   friendLocations,
   visitLocations,
@@ -165,52 +103,78 @@ function Sidebar({
   const handleSubmit = () => {
     // Convert preferences object to array of selected items
     const preferencesList = Object.keys(preferences).filter(key => preferences[key]);
-
-    onGenerate({
-      startTime,
-      endTime,
-      budget,
-      travelMode,
+    
+    onGenerate({ 
+      startTime, 
+      endTime, 
+      budget, 
+      travelMode, 
       travelRadius,
       preferences: preferencesList,
       dietaryNeeds,
       personas: personas
     });
   };
-
-  // Ensure the tabs have enough space
-  const TAB_HEIGHT = 48; // height of the tab bar
-  const BUTTON_HEIGHT = 80; // height of the button container
-
-  // Adjust the TabPanel component to have proper height calculations
-  useEffect(() => {
-    const adjustTabPanelHeight = () => {
-      const sidebar = document.querySelector('.sidebar');
-      if (sidebar) {
-        const tabPanels = document.querySelectorAll('.MuiTabPanel-root');
-        const windowHeight = window.innerHeight;
-        const titleHeight = document.querySelector('.sidebar h5')?.offsetHeight || 0;
-        const tabsHeight = TAB_HEIGHT;
-        const buttonContainerHeight = BUTTON_HEIGHT;
-
-        // Calculate maximum available height for the tab panel
-        const maxHeight = windowHeight - titleHeight - tabsHeight - buttonContainerHeight - 40; // 40px for padding
-
-        tabPanels.forEach(panel => {
-          panel.style.maxHeight = `${maxHeight}px`;
-        });
-      }
-    };
-
-    // Run on mount and window resize
-    adjustTabPanelHeight();
-    window.addEventListener('resize', adjustTabPanelHeight);
-
-    // Clean up
-    return () => window.removeEventListener('resize', adjustTabPanelHeight);
-  }, []);
-
-
+  // Component for displaying locations
+  const LocationList = ({ title, locations, type }) => (
+    <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 2 }}>
+      <Typography variant="h6" fontSize={16} fontWeight="500" sx={{ mb: 1 }}>{title}</Typography>
+      {locations.length === 0 ? (
+        <Box sx={{ 
+          p: 2, 
+          textAlign: 'center', 
+          backgroundColor: '#f9f9f9', 
+          borderRadius: 1,
+          border: '1px dashed #ddd'
+        }}>
+          <Typography variant="body2" color="text.secondary">No locations added yet.</Typography>
+        </Box>
+      ) : (
+        <List dense sx={{ maxHeight: '200px', overflowY: 'auto' }}>
+          {locations.map((loc, index) => (
+            <ListItem
+              key={index}
+              className="location-item"
+              secondaryAction={
+                <IconButton 
+                  edge="end" 
+                  aria-label="delete" 
+                  onClick={() => removeLocation(type, index)}
+                  sx={{ 
+                    color: '#d32f2f', 
+                    '&:hover': { 
+                      backgroundColor: 'rgba(211, 47, 47, 0.1)' 
+                    }
+                  }}
+                >
+                  <FaTrash size={16} />
+                </IconButton>
+              }
+              sx={{ 
+                borderRadius: 1,
+                mb: 0.5,
+                '&:hover': { backgroundColor: '#f5f9ff' }
+              }}
+            >
+              <ListItemText 
+                primary={
+                  <Typography 
+                    variant="body2" 
+                    fontWeight="500"
+                    sx={{ maxWidth: '300px', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                  >
+                    {loc.name.length > 35 ? `${loc.name.substring(0, 35)}...` : loc.name}
+                  </Typography>
+                }
+                secondary={`${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`}
+                secondaryTypographyProps={{ fontSize: '12px' }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </Paper>
+  );
   // If we're showing results view
   if (view === 'result') {
     return (
@@ -249,17 +213,17 @@ function Sidebar({
               Add "{searchedPlace.name.substring(0, 40)}..." as:
             </Typography>
             <Box display="flex" gap={1}>
-              <Button
-                variant="outlined"
-                startIcon={<BsFillPeopleFill />}
+              <Button 
+                variant="outlined" 
+                startIcon={<BsFillPeopleFill />} 
                 onClick={() => addLocation('friend')}
                 size="small"
               >
                 Friend's Location
               </Button>
-              <Button
-                variant="outlined"
-                startIcon={<FaMapMarkerAlt />}
+              <Button 
+                variant="outlined" 
+                startIcon={<FaMapMarkerAlt />} 
                 onClick={() => addLocation('visit')}
                 size="small"
               >
@@ -268,10 +232,10 @@ function Sidebar({
             </Box>
           </Paper>
         )}        <div className="location-list-container">
-          <LocationList title="Friends' Locations" locations={friendLocations} type="friend" removeLocation={removeLocation} />
-          <LocationList title="Areas to Visit" locations={visitLocations} type="visit" removeLocation={removeLocation} />
+          <LocationList title="Friends' Locations" locations={friendLocations} type="friend" />
+          <LocationList title="Areas to Visit" locations={visitLocations} type="visit" />
         </div>
-
+        
         <Box mt={2}>
           <Typography variant="h6" fontSize={16}>Starting Options</Typography>
           <FormControl component="fieldset" sx={{ mt: 1 }}>
@@ -288,37 +252,37 @@ function Sidebar({
         </Box>        <Box mt={3} mb={4}>
           <Typography variant="h6" fontSize={16} fontWeight="600" gutterBottom className="section-heading">Travel Mode</Typography>
           <div className="travel-mode-container">
-            <Chip
-              icon={<FaWalking />}
-              label="Walking"
-              onClick={() => setTravelMode('walking')}
+            <Chip 
+              icon={<FaWalking />} 
+              label="Walking" 
+              onClick={() => setTravelMode('walking')} 
               color={travelMode === 'walking' ? 'primary' : 'default'}
               size="medium"
               className={`travel-mode-chip ${travelMode === 'walking' ? 'selected' : ''}`}
               sx={{ my: 1 }}
             />
-            <Chip
-              icon={<FaBus />}
-              label="Public Transport"
-              onClick={() => setTravelMode('transit')}
+            <Chip 
+              icon={<FaBus />} 
+              label="Public Transport" 
+              onClick={() => setTravelMode('transit')} 
               color={travelMode === 'transit' ? 'primary' : 'default'}
               size="medium"
               className={`travel-mode-chip ${travelMode === 'transit' ? 'selected' : ''}`}
               sx={{ my: 1 }}
             />
-            <Chip
-              icon={<FaCar />}
-              label="Driving"
-              onClick={() => setTravelMode('driving')}
+            <Chip 
+              icon={<FaCar />} 
+              label="Driving" 
+              onClick={() => setTravelMode('driving')} 
               color={travelMode === 'driving' ? 'primary' : 'default'}
               size="medium"
               className={`travel-mode-chip ${travelMode === 'driving' ? 'selected' : ''}`}
               sx={{ my: 1 }}
             />
-            <Chip
-              icon={<MdDirectionsBike />}
-              label="Cycling"
-              onClick={() => setTravelMode('cycling')}
+            <Chip 
+              icon={<MdDirectionsBike />} 
+              label="Cycling" 
+              onClick={() => setTravelMode('cycling')} 
               color={travelMode === 'cycling' ? 'primary' : 'default'}
               size="medium"
               className={`travel-mode-chip ${travelMode === 'cycling' ? 'selected' : ''}`}
@@ -355,7 +319,7 @@ function Sidebar({
             />
           </Grid>
         </Grid>
-
+        
         <FormControl fullWidth sx={{ mb: 2 }} size="small">
           <InputLabel>Budget</InputLabel>
           <Select
@@ -368,7 +332,7 @@ function Sidebar({
             <MenuItem value="high">High Budget ($$$)</MenuItem>
           </Select>
         </FormControl>
-
+        
         <FormControl fullWidth sx={{ mb: 2 }} size="small">
           <InputLabel>Dietary Needs</InputLabel>
           <Select
@@ -436,14 +400,14 @@ function Sidebar({
       <TabPanel value={tabValue} index={2}>
         <PersonaInput onPersonasChange={handlePersonasChange} />
       </TabPanel>      {/* Generate Button - always visible */}      <div className="bottom-button-container">
-        <Button
-          variant="contained"
-          fullWidth
+        <Button 
+          variant="contained" 
+          fullWidth 
           size="large"
           onClick={handleSubmit}
           disabled={isLoading}
-          sx={{
-            py: 1.5,
+          sx={{ 
+            py: 1.5, 
             fontSize: '1.1rem',
             fontWeight: 'bold',
             boxShadow: '0 4px 12px rgba(63, 81, 181, 0.3)',
@@ -463,35 +427,32 @@ function Sidebar({
 }
 
 // Ensure the tabs have enough space
-// const TAB_HEIGHT = 48; // height of the tab bar
-// const BUTTON_HEIGHT = 80; // height of the button container
-
-// Adjust the TabPanel component to have proper height calculations
-// React.useEffect(() => {
-//   const adjustTabPanelHeight = () => {
-//     const sidebar = document.querySelector('.sidebar');
-//     if (sidebar) {
-//       const tabPanels = document.querySelectorAll('.MuiTabPanel-root');
-//       const windowHeight = window.innerHeight;
-//       const titleHeight = document.querySelector('.sidebar h5')?.offsetHeight || 0;
-//       const tabsHeight = TAB_HEIGHT; 
-//       const buttonContainerHeight = BUTTON_HEIGHT;
+const TAB_HEIGHT = 48; // height of the tab bar
+const BUTTON_HEIGHT = 80; // height of the button container
+  const adjustTabPanelHeight = () => {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+      const tabPanels = document.querySelectorAll('.MuiTabPanel-root');
+      const windowHeight = window.innerHeight;
+      const titleHeight = document.querySelector('.sidebar h5')?.offsetHeight || 0;
+      const tabsHeight = TAB_HEIGHT; 
+      const buttonContainerHeight = BUTTON_HEIGHT;
       
-//       // Calculate maximum available height for the tab panel
-//       const maxHeight = windowHeight - titleHeight - tabsHeight - buttonContainerHeight - 40; // 40px for padding
+      // Calculate maximum available height for the tab panel
+      const maxHeight = windowHeight - titleHeight - tabsHeight - buttonContainerHeight - 40; // 40px for padding
       
-//       tabPanels.forEach(panel => {
-//         panel.style.maxHeight = `${maxHeight}px`;
-//       });
-//     }
-//   };
+      tabPanels.forEach(panel => {
+        panel.style.maxHeight = `${maxHeight}px`;
+      });
+    }
+  };
   
-//   // Run on mount and window resize
-//   adjustTabPanelHeight();
-//   window.addEventListener('resize', adjustTabPanelHeight);
+  // Run on mount and window resize
+  adjustTabPanelHeight();
+  window.addEventListener('resize', adjustTabPanelHeight);
   
-//   // Clean up
-//   return () => window.removeEventListener('resize', adjustTabPanelHeight);
-// }, []);
+  // Clean up
+  return () => window.removeEventListener('resize', adjustTabPanelHeight);
+}, []);
 
 export default Sidebar;

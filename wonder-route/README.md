@@ -1,6 +1,39 @@
-# Getting Started with Create React App
+# Wonder Route: AI-Assisted Trip Planner for London
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A multi-person, AI-assisted trip planner for London with map integration and user preferences. This project is created for the "AI for Ease" hackathon.
+
+## Project Overview
+
+Wonder Route is an intelligent trip planning application that uses AI (Google's Gemini) to create personalized itineraries for tourists in London. The app considers multiple starting points, personal preferences, travel modes, and more to suggest optimized day plans.
+
+## Key Features
+
+- **Map Integration**: London map with starting point selection
+- **Multi-Person Planning**: Find converging routes or optimal meetup points
+- **AI-Powered Recommendations**: Personalized suggestions based on preferences
+- **Smart Itinerary Generation**: Logical routes with activity timing
+- **Preference Customization**: Architecture, food, entertainment, museums, etc.
+- **Accessibility Options**: Budget, energy level, and dietary considerations
+
+## Project Roadmap
+
+### Phase 1: Core Functionality
+- Map Interface with Google Maps API
+- User preference collection
+- Gemini AI integration
+- Basic itinerary display
+
+### Phase 2: Smart Personalization
+- Persona input for each traveler
+- Advanced prompt engineering for Gemini
+- JSON-structured itineraries
+
+### Phase 3: Advanced Features
+- LangChain/Tools integration
+- Language & accessibility options
+- Multiple people sync with meetup optimization
+- Fun Gemini add-ons (captions, trivia)
+- Calendar export options
 
 ## Available Scripts
 
@@ -11,23 +44,54 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup
 
-### `npm test`
+### Frontend Setup
+1. Clone the repository
+2. Install frontend dependencies with `npm install`
+3. Create a `.env` file in the root directory based on `.env.example`
+4. Add your API keys:
+   - Get a Google Maps API key from [Google Cloud Console](https://console.cloud.google.com/)
+   - Get a Gemini API key from [AI Studio](https://aistudio.google.com/)
+5. Run the frontend app with `npm start`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Backend Setup (Optional)
+If you want to use the backend server instead of client-side API calls:
 
-### `npm run build`
+1. Navigate to the server directory: `cd server`
+2. Install server dependencies: `npm install`
+3. Create a `.env` file in the server directory based on `.env.example`
+4. Add your Gemini API key
+5. Run the server with `npm start` or `npm run dev` for development with auto-reload
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The backend server provides additional security by keeping your API keys private and offers enhanced performance for complex requests.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Implementation Progress
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### ✅ Phase 1: Core Functionality
+- **Map Interface**: Integrated Google Maps with location selection
+- **Preferences Panel**: Travel radius, mode, and interest selection
+- **Gemini Integration**: AI-powered itinerary generation
+- **Timeline View**: Visualized itinerary with activities, times, and locations
+
+### ✅ Phase 2: Smart Personalization
+- **Persona Input**: Multiple traveler profiles with budget, energy, interests
+- **Smart Prompt Engineering**: Structured prompts for Gemini
+- **JSON Itineraries**: Structured data format for display
+- **Meetup Optimization**: Central location finding for multiple travelers
+
+### 🔄 Phase 3: Advanced Features (Partially Implemented)
+- **Instagram Captions**: AI-generated photo captions
+- **Fun Facts**: Location trivia generation
+- **Map Integration**: View locations on map
+- **Backend Option**: Server setup for enhanced security
+
+## Next Steps
+- Improve UI/UX with animations and transitions
+- Add calendar export functionality
+- Implement language translation features
+- Enhance error handling and fallbacks
+- Add unit and integration tests
 
 ### `npm run eject`
 
