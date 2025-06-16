@@ -167,7 +167,10 @@ Please create a detailed itinerary with the following requirements:
 6. Ensure the plan fits within the specified start and end times
 7. For each location, include a fun historical fact or trivia
 8. If the group has different personas, suggest activities that accommodate different interests
-9. Offer at least one "Instagram-worthy" photo opportunity with a caption idea
+9. Offer at least one "Instagram-worthy" photo opportunity with a caption idea.
+10. Strictly follow the timeframe provided in the preferences.
+10. Follow all these strictly and ensure the plan is realistic for a day in London.
+11. Also add a logo which looks like an advertisement on the card of the place you suggest.
 
 Return your response in this JSON format:
 \`\`\`json
