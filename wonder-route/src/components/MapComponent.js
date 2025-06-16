@@ -94,20 +94,28 @@ function MapComponent({ friendLocations, visitLocations, addLocation, removeLoca
   const onPlaceChanged = () => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
-      if (place.geometry) {
-        const newCenter = {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        };
-        setCurrentCenter(newCenter);
-        setSearchResult(newCenter);
+      
+      // Check if place and place.geometry exist
+      if (!place || !place.geometry) {
+        console.warn('No place details available');
+        return;
+      }
+
+      const newCenter = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      };
+      setCurrentCenter(newCenter);
+      setSearchResult(newCenter);
+      
+      if (map) {
         map.panTo(newCenter);
         map.setZoom(15);
-        
-        // Clear the search input
-        if (searchInputRef.current) {
-          searchInputRef.current.value = '';
-        }
+      }
+      
+      // Clear the search input
+      if (searchInputRef.current) {
+        searchInputRef.current.value = '';
       }
     }
   };
