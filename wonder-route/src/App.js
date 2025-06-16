@@ -86,7 +86,13 @@ function App() {
     const payload = {
       friends: friendLocations,
       visits: visitLocations,
-      preferences: options,
+      startTime: options.startTime,
+      endTime: options.endTime,
+      budget: options.budget,
+      travelMode: options.travelMode,
+      travelRadius: options.travelRadius,
+      preferences: options.preferences,
+      dietaryNeeds: options.dietaryNeeds,
       personas: options.personas || []
     };
 
