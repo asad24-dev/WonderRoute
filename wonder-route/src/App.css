@@ -24,7 +24,7 @@ body {
   background-color: white;
   display: flex;
   flex-direction: column;
-  padding-bottom: 80px; /* Extra padding to ensure content doesn't get hidden behind the generate button */
+  padding-bottom: 0; /* Remove extra padding */
 }
 
 /* Custom scrollbar for better UX */
@@ -335,6 +335,7 @@ body {
   backdrop-filter: blur(5px);
   border-top: 1px solid #e0e0e0;
   z-index: 10;
+  margin-top: auto;
 }
 
 /* Persona input styling */

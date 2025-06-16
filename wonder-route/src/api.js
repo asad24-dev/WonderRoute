@@ -44,10 +44,14 @@ const mockApiCall = (payload) => {
   console.log("Using mock data for itinerary");
 
   // Destructure payload for easy use in the template string
-  const { friends, visits, preferences } = payload;
+  const { friends, visits, preferences, startTime, endTime, budget } = payload;
   const friendNames = friends.map(f => f.name).join(', ') || 'your friends';
   const visitNames = visits.map(v => v.name).join(', ') || 'the recommended areas';
-  const { startTime, endTime, budget, food, coffee } = preferences;
+  
+  // Check if specific preferences are in the array
+  const hasFood = preferences.includes('food');
+  const hasCoffee = preferences.includes('coffee');
+  const hasBlackHistory = preferences.includes('blackHistoryMonth');
   
   // Format as JSON to match real API
   return {
@@ -72,36 +76,36 @@ const mockApiCall = (payload) => {
       },
       {
         time: "10:30",
-        activity: coffee ? "Coffee Break" : "Morning Stroll",
-        location: coffee ? "Monmouth Coffee" : "Covent Garden",
+        activity: hasCoffee ? "Coffee Break" : "Morning Stroll",
+        location: hasCoffee ? "Monmouth Coffee" : "Covent Garden",
         duration: "45 mins",
-        cost: coffee ? "£5" : "£0",
-        description: coffee ? "Enjoy a morning coffee at one of London's best cafes" : "Take a pleasant morning walk",
-        funFact: coffee ? "Monmouth Coffee has been roasting coffee in London since 1978" : "Covent Garden used to be London's main fruit and vegetable market",
-        photoOpp: coffee ? "Artsy coffee cup shot with London backdrop" : "Street performers at Covent Garden make for great photos",
-        mapsUrl: coffee ? "https://maps.google.com/?q=Monmouth+Coffee,London" : "https://maps.google.com/?q=Covent+Garden,London"
+        cost: hasCoffee ? "£5" : "£0",
+        description: hasCoffee ? "Enjoy a morning coffee at one of London's best cafes" : "Take a pleasant morning walk",
+        funFact: hasCoffee ? "Monmouth Coffee has been roasting coffee in London since 1978" : "Covent Garden used to be London's main fruit and vegetable market",
+        photoOpp: hasCoffee ? "Artsy coffee cup shot with London backdrop" : "Street performers at Covent Garden make for great photos",
+        mapsUrl: hasCoffee ? "https://maps.google.com/?q=Monmouth+Coffee,London" : "https://maps.google.com/?q=Covent+Garden,London"
       },
       {
         time: "12:00",
-        activity: food ? "Lunch" : "Cultural Visit",
-        location: food ? "Borough Market" : "British Museum",
+        activity: hasFood ? "Lunch" : "Cultural Visit",
+        location: hasFood ? "Borough Market" : "British Museum",
         duration: "1 hour",
-        cost: food ? `£${budget === 'low' ? '10' : budget === 'medium' ? '20' : '35'}` : "£0",
-        description: food ? "Enjoy diverse food options at London's oldest food market" : "Explore one of the world's finest museums",
-        funFact: food ? "Borough Market has existed in some form since at least the 12th century" : "The British Museum houses over 8 million works",
-        photoOpp: food ? "Colorful food stalls make for great Instagram content" : "The Great Court's stunning glass ceiling",
-        mapsUrl: food ? "https://maps.google.com/?q=Borough+Market,London" : "https://maps.google.com/?q=British+Museum,London"
+        cost: hasFood ? `£${budget === 'low' ? '10' : budget === 'medium' ? '20' : '35'}` : "£0",
+        description: hasFood ? "Enjoy diverse food options at London's oldest food market" : "Explore one of the world's finest museums",
+        funFact: hasFood ? "Borough Market has existed in some form since at least the 12th century" : "The British Museum houses over 8 million works",
+        photoOpp: hasFood ? "Colorful food stalls make for great Instagram content" : "The Great Court's stunning glass ceiling",
+        mapsUrl: hasFood ? "https://maps.google.com/?q=Borough+Market,London" : "https://maps.google.com/?q=British+Museum,London"
       },
       {
         time: "15:00",
-        activity: "Main Attraction",
-        location: visits[0]?.name || "Tower of London",
+        activity: hasBlackHistory ? "Black History Tour" : "Main Attraction",
+        location: hasBlackHistory ? "Black Cultural Archives" : (visits[0]?.name || "Tower of London"),
         duration: "2 hours",
         cost: `£${budget === 'low' ? '15' : budget === 'medium' ? '25' : '40'}`,
-        description: "Explore this historic castle on the north bank of the River Thames",
-        funFact: "The Tower of London has served as a royal palace, prison, treasury, and zoo",
-        photoOpp: "The Crown Jewels exhibition or with a Yeoman Warder (Beefeater)",
-        mapsUrl: `https://maps.google.com/?q=${visits[0]?.name || "Tower+of+London"},London`
+        description: hasBlackHistory ? "Explore London's rich Black history and cultural heritage" : "Explore this historic castle on the north bank of the River Thames",
+        funFact: hasBlackHistory ? "The Black Cultural Archives is the first national heritage center dedicated to Black British history" : "The Tower of London has served as a royal palace, prison, treasury, and zoo",
+        photoOpp: hasBlackHistory ? "The beautiful Georgian architecture of the Black Cultural Archives" : "The Crown Jewels exhibition or with a Yeoman Warder (Beefeater)",
+        mapsUrl: hasBlackHistory ? "https://maps.google.com/?q=Black+Cultural+Archives,London" : `https://maps.google.com/?q=${visits[0]?.name || "Tower+of+London"},London`
       },
       {
         time: endTime,

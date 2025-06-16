@@ -467,36 +467,4 @@ function Sidebar({
   );
 }
 
-// Ensure the tabs have enough space
-// const TAB_HEIGHT = 48; // height of the tab bar
-// const BUTTON_HEIGHT = 80; // height of the button container
-
-// Adjust the TabPanel component to have proper height calculations
-// React.useEffect(() => {
-//   const adjustTabPanelHeight = () => {
-//     const sidebar = document.querySelector('.sidebar');
-//     if (sidebar) {
-//       const tabPanels = document.querySelectorAll('.MuiTabPanel-root');
-//       const windowHeight = window.innerHeight;
-//       const titleHeight = document.querySelector('.sidebar h5')?.offsetHeight || 0;
-//       const tabsHeight = TAB_HEIGHT; 
-//       const buttonContainerHeight = BUTTON_HEIGHT;
-      
-//       // Calculate maximum available height for the tab panel
-//       const maxHeight = windowHeight - titleHeight - tabsHeight - buttonContainerHeight - 40; // 40px for padding
-      
-//       tabPanels.forEach(panel => {
-//         panel.style.maxHeight = `${maxHeight}px`;
-//       });
-//     }
-//   };
-  
-//   // Run on mount and window resize
-//   adjustTabPanelHeight();
-//   window.addEventListener('resize', adjustTabPanelHeight);
-  
-//   // Clean up
-//   return () => window.removeEventListener('resize', adjustTabPanelHeight);
-// }, []);
-
 export default Sidebar;
