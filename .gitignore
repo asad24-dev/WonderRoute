@@ -180,3 +180,4 @@ cython_debug/
 *.stl
 *.db
 *.pckl
+node_modules/
