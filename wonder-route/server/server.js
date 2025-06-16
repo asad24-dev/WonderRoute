@@ -153,6 +153,8 @@ PREFERENCES:
 - Travel mode: ${travelMode}
 - Interests: ${prefList.join(', ')}
 
+If the user has mentioned "Black history month" as an interest, try to suggest a place that is related to black history. If it is, make sure to include this in the fun fact about the related place.
+
 ${personas.length > 0 ? `PERSONAS OF TRAVELERS:\n${personasText}` : ''}
 
 Please create a detailed itinerary with the following requirements:
