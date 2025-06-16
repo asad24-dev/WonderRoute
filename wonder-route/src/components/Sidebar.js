@@ -138,7 +138,8 @@ function Sidebar({
     parks: false,
     shopping: false,
     markets: false,
-    historicalSites: false
+    historicalSites: false,
+    blackHistoryMonth: false
   });
   const [personas, setPersonas] = useState([]);
   const [dietaryNeeds, setDietaryNeeds] = useState('none');
@@ -395,7 +396,7 @@ function Sidebar({
               />
               <FormControlLabel
                 control={<Checkbox checked={preferences.food} onChange={handlePreferenceChange} name="food" size="small" />}
-                label="Food"
+                label="Food & Dining"
               />
               <FormControlLabel
                 control={<Checkbox checked={preferences.entertainment} onChange={handlePreferenceChange} name="entertainment" size="small" />}
@@ -407,13 +408,13 @@ function Sidebar({
               />
               <FormControlLabel
                 control={<Checkbox checked={preferences.coffee} onChange={handlePreferenceChange} name="coffee" size="small" />}
-                label="Coffee"
+                label="Coffee Shops"
               />
             </Grid>
             <Grid item xs={6}>
               <FormControlLabel
                 control={<Checkbox checked={preferences.parks} onChange={handlePreferenceChange} name="parks" size="small" />}
-                label="Parks"
+                label="Parks & Nature"
               />
               <FormControlLabel
                 control={<Checkbox checked={preferences.shopping} onChange={handlePreferenceChange} name="shopping" size="small" />}
@@ -426,6 +427,10 @@ function Sidebar({
               <FormControlLabel
                 control={<Checkbox checked={preferences.historicalSites} onChange={handlePreferenceChange} name="historicalSites" size="small" />}
                 label="Historical Sites"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={preferences.blackHistoryMonth} onChange={handlePreferenceChange} name="blackHistoryMonth" size="small" />}
+                label="Black History Month"
               />
             </Grid>
           </Grid>
