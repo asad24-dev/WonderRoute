@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import MapComponent from './components/MapComponent';
 import Sidebar from './components/Sidebar';
-import { mockApiCall } from './api'; // We will create this mock API
+import { mockApiCall } from './api';
 import './App.css';
 
 function App() {
@@ -11,31 +11,36 @@ function App() {
 
   const [itinerary, setItinerary] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [view, setView] = useState('form'); // 'form' or 'result'
+  const [view, setView] = useState('form');
 
-  const addLocation = useCallback((type) => {
+  // A more generic function to add any location
+  const addLocation = useCallback((location, type) => {
+    if (type === 'friend') {
+      setFriendLocations(prev => [...prev, location]);
+    } else {
+      setVisitLocations(prev => [...prev, location]);
+    }
+  }, []);
+
+  // This function is specifically for the search bar result
+  const addSearchedLocation = useCallback((type) => {
     if (!searchedPlace) return;
     const newLocation = {
       name: searchedPlace.name,
       lat: searchedPlace.geometry.location.lat(),
       lng: searchedPlace.geometry.location.lng(),
     };
-
-    if (type === 'friend') {
-      setFriendLocations(prev => [...prev, newLocation]);
-    } else {
-      setVisitLocations(prev => [...prev, newLocation]);
-    }
+    addLocation(newLocation, type);
     setSearchedPlace(null); // Clear after adding
-  }, [searchedPlace]);
+  }, [searchedPlace, addLocation]);
 
-  const removeLocation = (type, index) => {
+  const removeLocation = useCallback((type, index) => {
     if (type === 'friend') {
       setFriendLocations(prev => prev.filter((_, i) => i !== index));
     } else {
       setVisitLocations(prev => prev.filter((_, i) => i !== index));
     }
-  };
+  }, []);
 
   const handleGenerate = async (options) => {
     setIsLoading(true);
@@ -69,12 +74,14 @@ function App() {
         friendLocations={friendLocations}
         visitLocations={visitLocations}
         onPlaceSelected={setSearchedPlace}
+        addLocation={addLocation}
+        removeLocation={removeLocation}
       />
       <Sidebar
         friendLocations={friendLocations}
         visitLocations={visitLocations}
         searchedPlace={searchedPlace}
-        addLocation={addLocation}
+        addLocation={addSearchedLocation} // Sidebar uses the search-specific add function
         removeLocation={removeLocation}
         onGenerate={handleGenerate}
         itinerary={itinerary}
