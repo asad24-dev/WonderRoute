@@ -41,10 +41,10 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      style={{ height: '100%' }}
+      style={{ overflowY: 'auto' }} // Allow vertical scrolling
       {...other}
     >
-      {value === index && <Box sx={{ p: 2, height: '100%' }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 2 }}>{children}</Box>} {/* Removed height: '100%' */}
     </div>
   );
 }
@@ -230,7 +230,7 @@ function Sidebar({
   // Planning view
   return (
     <div className="sidebar">
-      <Typography variant="h5" sx={{ mb: 2 }}>Wonder Route: London Planner</Typography>
+      <Typography variant="h5" sx={{ mb: 2, textAlign: 'center' }}>Wonder Route: London Planner</Typography>
 
       {/* Tabs for organizing the sidebar */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -444,6 +444,8 @@ function Sidebar({
           disabled={isLoading}
           sx={{
             py: 1.5,
+            margin: '0',
+            alignSelf: 'bottom',
             fontSize: '1.1rem',
             fontWeight: 'bold',
             boxShadow: '0 4px 12px rgba(63, 81, 181, 0.3)',

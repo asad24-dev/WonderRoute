@@ -12,10 +12,11 @@ import {
   FaMapMarkerAlt,
   FaInfoCircle,
   FaInstagram,
-  FaCalendarPlus
+  FaCalendarPlus,
+  FaStar, FaStarHalfAlt, FaRegStar // Added for star ratings
 } from 'react-icons/fa';
 import { MdAttachMoney, MdDirectionsTransit } from 'react-icons/md';
-import { Button, Paper, Typography, Box, Chip, Divider, Tooltip, Modal } from '@mui/material';
+import { Button, Paper, Typography, Box, Chip, Divider, Tooltip, Modal, Rating } from '@mui/material'; // Added Rating
 import { getCaption, getTrivia } from '../api';
 
 // Styles for the timeline component
@@ -96,6 +97,111 @@ const getActivityIcon = (activity) => {
 const formatCost = (cost) => {
   if (!cost) return 'Free';
   return typeof cost === 'string' ? cost : `£${cost}`;
+};
+
+// Function to generate random star rating
+const generateRandomRating = () => {
+  const ratings = [4,4.1,4.2,4.3,4.4,4.5,4.8];
+  return ratings[Math.floor(Math.random() * ratings.length)];
+};
+
+// New component for individual timeline items
+const TimelineItem = ({ item, index, handleOpenMaps, handleGenerateTrivia, handleGenerateCaption }) => {
+  const itemType = item.activity ? item.activity.toLowerCase() : "";
+  const isRestaurant = itemType.includes('lunch') || itemType.includes('dinner') || itemType.includes('food') || itemType.includes('coffee') || itemType.includes('café');
+  const [rating] = useState(isRestaurant ? generateRandomRating() : null);
+  return (
+    <VerticalTimelineElement
+      key={index} // It's better to pass key from parent when mapping
+      date={item.time}
+      icon={getActivityIcon(item.activity)}
+      iconStyle={{ background: '#3f51b5', color: '#fff' }}
+    >
+      <Typography variant="h6" className="vertical-timeline-element-title">
+        {item.activity}
+      </Typography>
+      <Typography variant="subtitle1" className="vertical-timeline-element-subtitle">
+        {item.location}
+      </Typography>
+      {isRestaurant && rating !== null && (
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+          <Rating name={`rating-${index}`} value={rating} precision={0.5} readOnly size="small" />
+          <Typography variant="body2" color="textSecondary" sx={{ ml: 0.5 }}>({rating})</Typography>
+        </Box>
+      )}
+      <Typography variant="body2" color="textSecondary">
+        Duration: {item.duration}
+      </Typography>
+      
+      <Box mt={1} mb={1} display="flex" flexWrap="wrap" alignItems="center">
+        <Chip
+          icon={<MdAttachMoney />}
+          label={formatCost(item.cost)}
+          size="small"
+          style={styles.chip}
+          color="primary"
+          variant="outlined"
+        />
+        
+        {isRestaurant && (
+        <Chip
+          label="Sponsored"
+          size="small"
+          style={styles.chip}
+          color="primary"
+          variant="outlined"
+        />
+      )}
+        {item.mapsUrl && (
+            <Tooltip title="View on Map">
+                <Chip
+                icon={<FaMapMarkerAlt />}
+                label="Map"
+                size="small"
+                style={styles.chip}
+                onClick={() => handleOpenMaps(item.mapsUrl)}
+                color="secondary"
+                variant="outlined"
+                />
+            </Tooltip>
+        )}
+      </Box>
+      
+      <Divider style={{ margin: '10px 0' }}/>
+      <Typography variant="body1">{item.description}</Typography>
+      
+      <Box mt={2} display="flex" justifyContent="space-between" flexWrap="wrap">
+        <Button 
+          size="small" 
+          variant="outlined"
+          startIcon={<FaInfoCircle />}
+          onClick={() => handleGenerateTrivia(item.location)}
+        >
+          Fun Fact
+        </Button>
+        
+        <Button 
+          size="small" 
+          variant="outlined"
+          startIcon={<FaInstagram />}
+          onClick={() => handleGenerateCaption(item.location, item.activity)}
+        >
+          Photo Caption
+        </Button>
+        
+        {item.photoOpp && (
+          <Tooltip title={item.photoOpp}>
+            <Chip
+              icon={<FaCamera />}
+              label="Photo Spot"
+              size="small"
+              style={styles.chip}
+            />
+          </Tooltip>
+        )}
+      </Box>
+    </VerticalTimelineElement>
+  );
 };
 
 // Main Timeline component
@@ -210,79 +316,14 @@ function TimelineView({ itineraryData, onBack }) {
       {/* Timeline */}
       <VerticalTimeline layout="1-column-left">
         {itineraryData.itinerary && itineraryData.itinerary.map((item, index) => (
-          <VerticalTimelineElement
-            key={index}
-            date={item.time}
-            icon={getActivityIcon(item.activity)}
-            iconStyle={{ background: '#3f51b5', color: '#fff' }}
-          >
-            <Typography variant="h6" className="vertical-timeline-element-title">
-              {item.activity}
-            </Typography>
-            <Typography variant="subtitle1" className="vertical-timeline-element-subtitle">
-              {item.location}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Duration: {item.duration}
-            </Typography>
-            
-            <Box mt={1} mb={1} display="flex" flexWrap="wrap" alignItems="center">
-              <Chip
-                icon={<MdAttachMoney />}
-                label={formatCost(item.cost)}
-                size="small"
-                style={styles.chip}
-                color="primary"
-                variant="outlined"
-              />
-              
-              <Tooltip title="View on Map">
-                <Chip
-                  icon={<FaMapMarkerAlt />}
-                  label="Map"
-                  size="small"
-                  style={styles.chip}
-                  onClick={() => handleOpenMaps(item.mapsUrl)}
-                  color="secondary"
-                  variant="outlined"
-                />
-              </Tooltip>
-            </Box>
-            
-            <Divider style={{ margin: '10px 0' }}/>
-            <Typography variant="body1">{item.description}</Typography>
-            
-            <Box mt={2} display="flex" justifyContent="space-between" flexWrap="wrap">
-              <Button 
-                size="small" 
-                variant="outlined"
-                startIcon={<FaInfoCircle />}
-                onClick={() => handleGenerateTrivia(item.location)}
-              >
-                Fun Fact
-              </Button>
-              
-              <Button 
-                size="small" 
-                variant="outlined"
-                startIcon={<FaInstagram />}
-                onClick={() => handleGenerateCaption(item.location, item.activity)}
-              >
-                Photo Caption
-              </Button>
-              
-              {item.photoOpp && (
-                <Tooltip title={item.photoOpp}>
-                  <Chip
-                    icon={<FaCamera />}
-                    label="Photo Spot"
-                    size="small"
-                    style={styles.chip}
-                  />
-                </Tooltip>
-              )}
-            </Box>
-          </VerticalTimelineElement>
+          <TimelineItem 
+            key={index} 
+            item={item} 
+            index={index} 
+            handleOpenMaps={handleOpenMaps} 
+            handleGenerateTrivia={handleGenerateTrivia}
+            handleGenerateCaption={handleGenerateCaption}
+          />
         ))}
       </VerticalTimeline>
       
