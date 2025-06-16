@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
@@ -25,6 +25,10 @@ const visitIcon = {
   url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
 };
 
+const searchIcon = {
+  url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+};
+
 function MapComponent({ friendLocations, visitLocations, addLocation, removeLocation }) {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -33,6 +37,9 @@ function MapComponent({ friendLocations, visitLocations, addLocation, removeLoca
 
   const [map, setMap] = useState(null);
   const [currentCenter, setCurrentCenter] = useState(center);
+  const [searchResult, setSearchResult] = useState(null);
+  const autocompleteRef = useRef(null);
+  const searchInputRef = useRef(null);
   
   const onMapLoad = useCallback(map => {
     setMap(map);
@@ -84,6 +91,31 @@ function MapComponent({ friendLocations, visitLocations, addLocation, removeLoca
     if (map) map.getDiv().style.cursor = 'default';
   }
 
+  const onPlaceChanged = () => {
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      if (place.geometry) {
+        const newCenter = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
+        setCurrentCenter(newCenter);
+        setSearchResult(newCenter);
+        map.panTo(newCenter);
+        map.setZoom(15);
+        
+        // Clear the search input
+        if (searchInputRef.current) {
+          searchInputRef.current.value = '';
+        }
+      }
+    }
+  };
+
+  const handleSearchMarkerClick = () => {
+    setSearchResult(null);
+  };
+
   if (loadError) return <div>Error loading maps. Please check your API key and enabled APIs.</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
   return (
@@ -93,10 +125,10 @@ function MapComponent({ friendLocations, visitLocations, addLocation, removeLoca
         center={center}
         zoom={12}
         onLoad={onMapLoad}
-        onIdle={onIdle} // Use onIdle to avoid excessive updates
+        onIdle={onIdle}
         options={{
-          disableDefaultUI: true, // Hides default controls
-          zoomControl: true, // Re-enable zoom control
+          disableDefaultUI: true,
+          zoomControl: true,
         }}
       >
         {friendLocations.map((loc, index) => (
@@ -119,7 +151,31 @@ function MapComponent({ friendLocations, visitLocations, addLocation, removeLoca
             onMouseOut={handleMouseOut}
           />
         ))}
+        {searchResult && (
+          <Marker
+            position={searchResult}
+            icon={searchIcon}
+            onClick={handleSearchMarkerClick}
+          />
+        )}
       </GoogleMap>
+      
+      {/* Search Bar */}
+      <div className="search-container">
+        <Autocomplete
+          onLoad={autocomplete => {
+            autocompleteRef.current = autocomplete;
+          }}
+          onPlaceChanged={onPlaceChanged}
+        >
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search for a location..."
+            className="search-input"
+          />
+        </Autocomplete>
+      </div>
       
       {/* Central Marker */}
       <div className="center-marker">
